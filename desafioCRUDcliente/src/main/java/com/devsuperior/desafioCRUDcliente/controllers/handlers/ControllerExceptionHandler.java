@@ -1,11 +1,14 @@
 package com.devsuperior.desafioCRUDcliente.controllers.handlers;
 
 import com.devsuperior.desafioCRUDcliente.dto.CustomError;
+import com.devsuperior.desafioCRUDcliente.dto.ValidationError;
 import com.devsuperior.desafioCRUDcliente.services.exceptions.DatabaseException;
 import com.devsuperior.desafioCRUDcliente.services.exceptions.ResourceNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -25,14 +28,17 @@ public class ControllerExceptionHandler {
         return ResponseEntity.status(status).body(err);
     }
 
-    @ExceptionHandler(DatabaseException.class)
-    public ResponseEntity<CustomError> database(DatabaseException e, HttpServletRequest request) {
-        HttpStatus status = HttpStatus.BAD_REQUEST;
-        CustomError err = new CustomError();
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ValidationError> validation(MethodArgumentNotValidException e, HttpServletRequest request) {
+        HttpStatus status = HttpStatus.UNPROCESSABLE_ENTITY;
+        ValidationError err = new ValidationError();
         err.setTimestamp(Instant.now());
         err.setStatus(status.value());
-        err.setError(e.getMessage());
+        err.setError("Dados invalidos");
         err.setPath(request.getRequestURI());
+        for (FieldError f : e.getBindingResult().getFieldErrors()) {
+            err.addErrors(f.getField(), f.getDefaultMessage());
+        }
         return ResponseEntity.status(status).body(err);
     }
 }
