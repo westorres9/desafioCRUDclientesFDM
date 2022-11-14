@@ -1,4 +1,4 @@
-package com.devsuperior.desafioCRUDcliente;
+package com.devsuperior.desafioCRUDcliente.repositories;
 
 import com.devsuperior.desafioCRUDcliente.entities.Client;
 import org.springframework.data.jpa.repository.JpaRepository;
