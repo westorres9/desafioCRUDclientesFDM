@@ -1,4 +1,4 @@
-package com.devsuperior.desafioCRUDcliente;
+package com.devsuperior.desafioCRUDcliente.services;
 
 import com.devsuperior.desafioCRUDcliente.dto.ClientDTO;
 import com.devsuperior.desafioCRUDcliente.entities.Client;
